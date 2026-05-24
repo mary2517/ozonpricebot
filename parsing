@@ -12,6 +12,7 @@ async def get_ozon_product(url: str):
         page = await context.new_page()
         try:
             await page.goto(url, timeout=60000, wait_until="domcontentloaded")
+            await page.wait_for_timeout(3000)
 
             title = await page.title()
             if "-" in title:
@@ -29,7 +30,7 @@ async def get_ozon_product(url: str):
                 clean = cln.replace("\xa0", "")
                 price = int(clean)
                 prices.append(price)
-            price = max(prices)
+            price = min(prices)
 
             return name, None
         except Exception as e:
