@@ -103,7 +103,9 @@ async def check_prices():
     for prod in products:
         pid, user_id, url, name, init_price, last_price, threshold, notified = prod
         _, new_price = await get_ozon_product(url)
-
+        if not new_price:
+            continue
+         
         discount = (init_price - new_price) / init_price * 100
         update_price(pid, new_price, notified=bool(notified))
 
@@ -119,5 +121,6 @@ if discount >= threshold and not notified:
                     f"🔗 {url}"
                 )
                 update_price(pid, new_price, notified=True)
+            except Exception as e:
+                logging.error(f"Ошибка отправки: {e}")v                 
         await asyncio.sleep(2)
-
