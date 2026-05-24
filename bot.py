@@ -9,7 +9,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import BOT_TOKEN, CHECK_HOURS
-from database import (init_db, add_product, get_user_products, delete_product, get_all_products, update_price)
+from database import (new_database, add_product, get_user_products, delete_product, get_all_products, update_price)
 from parser import get_ozon_product
 
 logging.basicConfig(level=logging.INFO)
@@ -130,7 +130,7 @@ async def check_prices():
         await asyncio.sleep(2)
 
 async def main():
-    init_db()
+    new_database()
     scheduler = AsyncIOScheduler()
     for hour in CHECK_HOURS:
         scheduler.add_job(check_prices, "cron", hour=hour, minute=0)
