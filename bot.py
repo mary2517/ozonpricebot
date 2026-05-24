@@ -94,3 +94,30 @@ async def delete(message: Message):
         return
     delete_product(int(parts[1]), message.from_user.id)
     await message.answer("🗑 Товар удалён.")
+
+
+async def check_prices():
+    logging.info("🔄 Проверка цен...")
+    products = get_all_products()
+
+    for prod in products:
+        pid, user_id, url, name, init_price, last_price, threshold, notified = prod
+        _, new_price = await get_ozon_product(url)
+
+        discount = (init_price - new_price) / init_price * 100
+        update_price(pid, new_price, notified=bool(notified))
+
+if discount >= threshold and not notified:
+            try:
+                await bot.send_message(
+                    user_id,
+                    f"🔥 Скидка!\n\n"
+                    f"📦 {name}\n"
+                    f"💰 Было: {init_price:.0f} ₽\n"
+                    f"💸 Сейчас: {new_price:.0f₽\n"
+                    f"📉 -{discount:.1f}%\n\n"
+                    f"🔗 {url}"
+                )
+                update_price(pid, new_price, notified=True)
+        await asyncio.sleep(2)
+
