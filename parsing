@@ -1,0 +1,39 @@
+import re
+from playwright.async_api import async_playwright
+
+async def get_ozon_product(url: str):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/122.0.0.0 Safari/537.36"
+        )
+        page = await context.new_page()
+        try:
+            await page.goto(url, timeout=60000, wait_until="domcontentloaded")
+
+            title = await page.title()
+            if "-" in title:
+                prt = title.split("—")
+                name = prt[0].strip()
+            else:
+                name = title.strip()
+            content = await page.content()
+            matches = re.findall(r'(\d[\d\s]{2,})\s*₽', content)
+            if not matches:
+                return None, None
+            prices = []
+            for m in matches:
+                cln = m.replace(" ","")
+                clean = cln.replace("\xa0", "")
+                price = int(clean)
+                prices.append(price)
+            price = max(prices)
+
+            return name, None
+        except Exception as e:
+            print(f"Ошибка парсинга: {e}")
+            return None, None
+        finally:
+            await browser.close()
