@@ -1,6 +1,7 @@
 import sqlite3
 from config import our_database
 
+
 # создаем таблицу для продуктов
 def new_database():
     con = sqlite3.connect(our_database)
@@ -22,6 +23,7 @@ def new_database():
     con.commit()
     con.close()
 
+
 """
 в таблице:
     1) уникальный id товара
@@ -35,23 +37,26 @@ def new_database():
 """
 
 
+# добавить продукт
 def add_product(user_id, url, name, price, barrier):
     con = sqlite3.connect(our_database)
     cursor = con.cursor()
 
-    cursor.execute("INSERT INTO products (user_id, url, name, first_price, last_price, barrier) VALUES (?, ?, ?, ?, ?, ?)",
-              (user_id, url, name, price, barrier))
+    cursor.execute(
+        "INSERT INTO products (user_id, url, name, first_price, last_price, barrier) VALUES (?, ?, ?, ?, ?, ?)",
+        (user_id, url, name, price, barrier))
 
     con.commit()
     con.close()
 
 
-def update_price(id, new_price, message=False):
+# обновить цену
+def update_price(product_id, new_price, message=False):
     con = sqlite3.connect(our_database)
     cursor = con.cursor()
 
     cursor.execute("UPDATE products SET last_price=? message=? WHERE id=?",
-                   (new_price, int(message), id))
+                   (new_price, int(message), product_id))
 
     con.commit()
     con.close()
@@ -62,7 +67,7 @@ def delete_product(product_id, user_id):
     cursor = con.cursor()
 
     cursor.execute("DELETE FROM products WHERE id=? AND user_id=?",
-              (product_id, user_id))
+                   (product_id, user_id))
 
     con.commit()
     con.close()
@@ -79,7 +84,7 @@ def users_products(user_id):
 
     con.close()
     return users_prod
-    
+
 
 # все товары из бд
 def all_products():
