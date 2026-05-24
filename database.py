@@ -74,7 +74,7 @@ def users_products(user_id):
     cursor = con.cursor()
 
     cursor.execute("SELECT id, name, first_price, last_price, barrier FROM products WHERE user_id=?",
-                   (user_id))
+                   (user_id,))
     users_prod = cursor.fetchall()
 
     con.close()
