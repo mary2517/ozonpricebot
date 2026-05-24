@@ -1,1 +1,3 @@
+BOT_TOKEN = "8799940434:AAFauIBGXZGgN1TLZIQp12FKWyP_aqPDLPc"
 our_database = "products.db"
+CHECK_HOURS = [9, 21]
