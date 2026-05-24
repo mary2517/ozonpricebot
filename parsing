@@ -32,7 +32,7 @@ async def get_ozon_product(url: str):
                 prices.append(price)
             price = min(prices)
 
-            return name, None
+            return name, float(price)
         except Exception as e:
             print(f"Ошибка парсинга: {e}")
             return None, None
