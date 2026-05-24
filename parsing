@@ -12,11 +12,14 @@ async def get_ozon_product(url: str):
         page = await context.new_page()
         try:
             await page.goto(url, timeout=60000, wait_until="domcontentloaded")
-            await page.wait_for_timeout(3000)
+            try:
+                await page.wait_for_selector("h1", timeout=5000)
+            except:
+                await page.wait_for_timeout(3000)
 
             title = await page.title()
             if "-" in title:
-                prt = title.split("—")
+                prt = title.split("-")
                 name = prt[0].strip()
             else:
                 name = title.strip()
