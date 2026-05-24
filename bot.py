@@ -6,9 +6,10 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import BOT_TOKEN
-from database import (add_product, get_user_products, delete_product, get_all_products, update_price)
+from config import BOT_TOKEN, CHECK_HOURS
+from database import (init_db, add_product, get_user_products, delete_product, get_all_products, update_price)
 from parser import get_ozon_product
 
 logging.basicConfig(level=logging.INFO)
@@ -127,3 +128,16 @@ async def check_prices():
                 logging.error(f"Ошибка отправки: {e}")
                 
         await asyncio.sleep(2)
+
+async def main():
+    init_db()
+    scheduler = AsyncIOScheduler()
+    for hour in CHECK_HOURS:
+        scheduler.add_job(check_prices, "cron", hour=hour, minute=0)
+    scheduler.start()
+
+    logging.info("🤖 Бот запущен")
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
