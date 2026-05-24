@@ -65,3 +65,26 @@ async def add_threshold(message: Message, state: FSMContext):
         f"💰 Цена: {data['price']:.0f} ₽\n"
         f"📉 Порог: -{threshold}%")
     await state.clear()
+
+@dp.message(Command("list"))
+async def list_products(message: Message):
+    items = get_user_products(message.from_user.id)
+    if not items:
+        await message.answer("📭 Пока нет товаров.")
+        return
+
+    text = "📋 Твои товары:\n\n"
+    for pid, name, init_p, last_p, thr in items:
+        text += (
+            f"🆔 {pid} | {name[:40]}\n"
+            f"   Было: {init_p:.0f} ₽ | Сейчас: {last_p:.0f} ₽ | Порог: -{thr}%\n\n")
+    await message.answer(text)
+
+@dp.message(Command("delete"))
+async def delete(message: Message):
+    parts = message.text.split()
+    if len(parts) < 2 or not parts[1].isdigit():
+        await message.answer("Используй: /delete <id>")
+        return
+    delete_product(int(parts[1]), message.from_user.id)
+    await message.answer("🗑 Товар удалён.")
