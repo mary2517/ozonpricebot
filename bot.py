@@ -6,6 +6,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from config import BOT_TOKEN
+from database import (add_product, get_user_products, delete_product)
+from parser import get_ozon_product
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
