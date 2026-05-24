@@ -42,9 +42,8 @@ def add_product(user_id, url, name, price, barrier):
     con = sqlite3.connect(our_database)
     cursor = con.cursor()
 
-    cursor.execute(
-        "INSERT INTO products (user_id, url, name, first_price, last_price, barrier) VALUES (?, ?, ?, ?, ?, ?)",
-        (user_id, url, name, price, barrier))
+    cursor.execute("INSERT INTO products (user_id, url, name, first_price, last_price, barrier) VALUES (?, ?, ?, ?, ?, ?)",
+        (user_id, url, name, price, price, barrier))
 
     con.commit()
     con.close()
