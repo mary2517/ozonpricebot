@@ -7,8 +7,10 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import BOT_TOKEN
-from database import (add_product, get_user_products, delete_product)
+from database import (add_product, get_user_products, delete_product, get_all_products, update_price)
 from parser import get_ozon_product
+
+logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -109,18 +111,18 @@ async def check_prices():
         discount = (init_price - new_price) / init_price * 100
         update_price(pid, new_price, notified=bool(notified))
 
-if discount >= threshold and not notified:
+        if discount >= threshold and not notified:
             try:
                 await bot.send_message(
                     user_id,
                     f"🔥 Скидка!\n\n"
                     f"📦 {name}\n"
                     f"💰 Было: {init_price:.0f} ₽\n"
-                    f"💸 Сейчас: {new_price:.0f₽\n"
+                    f"💸 Сейчас: {new_price:.0f}₽\n"
                     f"📉 -{discount:.1f}%\n\n"
-                    f"🔗 {url}"
-                )
+                    f"🔗 {url}")
                 update_price(pid, new_price, notified=True)
             except Exception as e:
-                logging.error(f"Ошибка отправки: {e}")v                 
+                logging.error(f"Ошибка отправки: {e}")
+                
         await asyncio.sleep(2)
