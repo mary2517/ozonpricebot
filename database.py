@@ -46,12 +46,12 @@ def add_product(user_id, url, name, price, barrier):
     con.close()
 
 
-def update_price(id, new_price, message):
+def update_price(id, new_price, message=False):
     con = sqlite3.connect(our_database)
     cursor = con.cursor()
 
     cursor.execute("UPDATE products SET last_price=? message=? WHERE id=?",
-                   (new_price, message, id))
+                   (new_price, int(message), id))
 
     con.commit()
     con.close()
