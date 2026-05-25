@@ -50,8 +50,8 @@ OzonPriceBot/
 ## Используемые технологии
 
 * Python 3
-* SQLite3
-* aiogram 3
+* SQLite
+* aiogram 
 * Playwright
 * APScheduler
 * asyncio
